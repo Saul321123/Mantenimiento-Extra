@@ -1,0 +1,82 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+// Modelo para representar usuarios en el sistema
+model Usuario {
+
+  id Int @id @default(autoincrement())
+  
+  nombre String
+
+  correo String
+
+  password String?
+
+  rol String
+}
+
+// Modelo para representar unidades (vehículos, maquinaria, etc.)
+model Unidad {
+  id Int @default(autoincrement()) @id
+  
+  marca String
+  
+  modelo String
+  
+  tipo String?
+  
+  color String
+  
+  numeroPlaca String
+  
+  kilometrajeActual Int
+  
+  fechaUltimoMantenimiento DateTime
+  
+  kilometrajeUltimoMantenimiento Int           // Añadí espacio para consistencia.
+  
+  nivelGasolina Int
+  
+  estado String
+  
+  Mantenimiento Mantenimiento[]
+}
+
+// Modelo para representar los mantenimientos realizados en las unidades
+model Mantenimiento {
+  id Int @default(autoincrement()) @id
+
+  fecha DateTime @default(now())
+  
+  tipo String
+  
+  diagnostico String
+  
+  descripcion String
+  
+  costo Int
+  
+  unidad Unidad @relation(fields: [unidadId], references: [id])
+  
+  unidadId Int
+}
+
+// Modelo para representar lugares o ubicaciones
+model Lugar {
+  id Int @default(autoincrement()) @id
+  
+  nombre String
+}
